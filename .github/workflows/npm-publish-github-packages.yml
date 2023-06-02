@@ -1,41 +1,28 @@
-name: Node.js Package
+name: Publish Package
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  publish:
+  build-and-publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up NodeJS ${{ matrix.node-version }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: https://registry.npmjs.org/
+          node-version: '14'
 
-      - name: Install Dependencies
-      - run: yarn install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Patch
-        run: npm version patch > version.txt
+      - name: Build package
+        run: npm run build
 
-      - name: Read version.txt
-        id: commit
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ./version.txt
-
-      - name: Deploy and Push
-        run: git config --global user.name "JIWONPARK1"
-          git config --global user.email "parkj5028@gmail.com"
-          git add package.json
-          git commit -m "${{ (steps.commit.outputs.content) }}"
-          echo ${{ (steps.commit.outputs.content) }}
-          yarn deploy
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.JIWON_GIT_TOKEN }}
+      - name: Publish to GitHub Package Registry
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && npm publish
