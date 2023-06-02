@@ -12,7 +12,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v2
-
       - name: Set up NodeJS ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -23,8 +22,7 @@ jobs:
       - run: yarn install
 
       - name: Patch
-        run: |
-          npm version patch > version.txt
+        run: npm version patch > version.txt
 
       - name: Read version.txt
         id: commit
@@ -33,8 +31,7 @@ jobs:
           path: ./version.txt
 
       - name: Deploy and Push
-        run: |
-          git config --global user.name "JIWONPARK1"
+        run: git config --global user.name "JIWONPARK1"
           git config --global user.email "parkj5028@gmail.com"
           git add package.json
           git commit -m "${{ (steps.commit.outputs.content) }}"
