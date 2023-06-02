@@ -6,23 +6,55 @@ on:
       - main
 
 jobs:
-  build-and-publish:
+  # build 환경
+  build:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        node-version: [16.13.1]
+    # 실행할 순서
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
+      # github action에서 NodeJS 세팅을 위한 actions/setup-node@v2 action을 사용
+      - uses: actions/checkout@v2
+      - name: Set up NodeJS ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-
-      - name: Authenticate with GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
-
-      - name: Log in to GitHub Package Registry
-        run: npm login --registry=https://npm.pkg.github.com --scope=@bbp-studio --always-auth
-
-      - name: Publish to GitHub Package Registry
-        run: npm publish
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+      # yarn을 사용하기에 yarn을 global install하고 install dependencies
+      - name: Install Dependencies
+        run: |
+          npm install -g yarn
+          npm install --legacy-peer-deps --save-dev --ignore-scripts install-peers
+          yarn install
+      # npm version을 patch 명령어를 통해 올리고, 리눅스 파이프라인 명령어를 통해 patch로 변경한 버전을 저장
+      - name: Patch
+        run: |
+          npm version patch > version.txt
+      # 저장한 버전 파일을 읽어 변수로 사용하기 위해 외부 action을 사용 -> setps.{id}.outputs.content로 사용 가능
+      - name: Read version.txt
+        id: commit
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./version.txt
+      # version을 변경한 package.json을 commit, 바뀐 버전으로 commit message 작성 후 push
+      - name: Deploy and Push
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git add package.json
+          git commit -m "${{ (steps.commit.outputs.content) }}"
+          echo ${{ (steps.commit.outputs.content) }}
+          yarn deploy
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # slack 웹훅을 통해 채널에 전송
+      - name: Send result to slack
+        uses: Ilshidur/action-slack@2.0.2
+        with:
+          args: '버전 ➡️${{ (steps.commit.outputs.content) }}의 결과는 ➡️${{ job.status }} 에요'
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
