@@ -1,0 +1,38 @@
+{
+  "name": "@bbp-studio/eslint-config-reactjs",
+  "version": "0.0.1",
+  "license": "BBPSTUDIO",
+  "author": "parkj5028 <parkj5028@gmail.com>",
+  "description": "A shareable ESLint configuration for react.js + Typescript",
+  "homepage": "https://github.com/bbp-studio/eslint-config-reactjs#readme",
+  "keywords": [
+    "reactjs",
+    "typescript",
+    "eslint",
+    "eslint-config"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bbp-studio/eslint-config-reactjs"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "eslint": ">=8",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "eslint-config-next": "13.1.6",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1"
+  }
+}
