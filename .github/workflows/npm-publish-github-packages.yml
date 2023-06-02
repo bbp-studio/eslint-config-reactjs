@@ -33,5 +33,5 @@ jobs:
 
       - name: Publish package
         run: |
-          echo "//registry.npmjs.org/:_authToken=\${secrets.JIWON_GIT_TOKEN}" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=\${{ secrets.JIWON_GIT_TOKEN }}" > .npmrc
           yarn publish --access public --registry https://registry.npmjs.org/
