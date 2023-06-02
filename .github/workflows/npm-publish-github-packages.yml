@@ -16,13 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build package
-        run: npm run build
+        run: yarn build
 
       - name: Publish to GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && npm publish
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && yarn publish
