@@ -1,4 +1,4 @@
-name: Publish Package
+name: Publish ESLint Config Package
 
 on:
   push:
@@ -16,10 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+          node-version: '14'
 
       - name: Publish to GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && yarn publish
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && npm publish
