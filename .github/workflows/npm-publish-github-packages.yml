@@ -21,8 +21,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build package
-        run: yarn build
-
       - name: Publish to GitHub Package Registry
         run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_GIT_TOKEN }}" >> ~/.npmrc && yarn publish
