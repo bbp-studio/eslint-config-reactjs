@@ -21,6 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "parkj5028@gmail.com"
+          git config --global user.name "JIWONPARK1"
+
       - name: Patch version and create new commit
         run: |
           yarn version patch --new-version prerelease
