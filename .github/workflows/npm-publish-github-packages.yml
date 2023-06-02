@@ -13,7 +13,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        node-version: [16.13.1]
+        node-version: [16.14.0]
     # 실행할 순서
     steps:
       # github action에서 NodeJS 세팅을 위한 actions/setup-node@v2 action을 사용
@@ -50,11 +50,3 @@ jobs:
           yarn deploy
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # slack 웹훅을 통해 채널에 전송
-      - name: Send result to slack
-        uses: Ilshidur/action-slack@2.0.2
-        with:
-          args: '버전 ➡️${{ (steps.commit.outputs.content) }}의 결과는 ➡️${{ job.status }} 에요'
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
