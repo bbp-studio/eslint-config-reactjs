@@ -19,4 +19,10 @@ jobs:
           node-version: '14'
 
       - name: Publish to GitHub Package Registry
-        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_NPM_TOKEN }}" >> ~/.npmrc && npm publish
+        run: echo "//npm.pkg.github.com/:_authToken=${{ secrets.JIWON_NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: Log in to GitHub Package Registry
+        run: npm login --registry=https://npm.pkg.github.com --scope=@parkj5028@gmail.com --always-auth
+
+      - name: Publish to GitHub Package Registry
+        run: npm publish
