@@ -12,6 +12,7 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up NodeJS ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -40,9 +41,4 @@ jobs:
           echo ${{ (steps.commit.outputs.content) }}
           yarn deploy
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # - name: Publish
-      # - run: yarn publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.JIWON_GIT_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.JIWON_GIT_TOKEN }}
